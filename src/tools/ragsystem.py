@@ -153,7 +153,7 @@ def collection_exists(persist_dir:str, collection_name: str) -> bool:
 question_type = {
     "rule" : "rulebook",
     "story" : "storybook",
-    "village": "stonebridge"
+    "village": "village_stonebridge_story_book"
 }
 prompt_type = {
     "rule" : rule_rag_prompt,

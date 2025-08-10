@@ -22,4 +22,5 @@ class GameSessionState(TypedDict):
     # 하나의 노드에서 질문이 몇번 이루어졌는지 체크
     question_time: int = 0 
     cache_box: dict
+    talking_context: Annotated[List[str], add_messages]
 

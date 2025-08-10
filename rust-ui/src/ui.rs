@@ -74,7 +74,7 @@ fn render_header(f: &mut Frame, app: &App, area: Rect) {
     f.render_widget(current_location, header_chunks[1]);
 }
 
-fn render_main_output_with_scroll(f: &mut Frame, app: &App, area: Rect) {
+fn render_main_output_with_scroll(f: &mut Frame, app: &mut App, area: Rect) {
     // 스크롤 영역을 위한 레이아웃
     let output_chunks = Layout::default()
         .direction(Direction::Horizontal)

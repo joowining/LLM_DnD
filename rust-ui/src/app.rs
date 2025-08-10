@@ -271,7 +271,7 @@ impl App {
         };
 
         if self.scroll_offset < max_scroll {
-            self.scroll_offset += 1;
+            self.scroll_offset += 2;
             
             // 맨 아래에 도달했다면 수동 스크롤 해제
             if self.scroll_offset >= max_scroll {
@@ -294,7 +294,7 @@ impl App {
         self.ensure_auto_scroll();
     }
 
-    pub fn get_display_text(&self) -> String {
+    pub fn get_display_text(&mut self) -> String {
         let mut all_lines = self.output_lines.clone();
 
         // 현재 타이핑 중인 텍스트가 있다면 추가
@@ -308,6 +308,7 @@ impl App {
         let end_idx = (start_idx + self.max_display_lines).min(all_lines.len());
 
         if start_idx < end_idx {
+            self.scroll_to_bottom();    
             all_lines[start_idx..end_idx].join("\n")
         } else {
             String::new()
