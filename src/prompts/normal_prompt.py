@@ -64,3 +64,29 @@ explain_about_character = ChatPromptTemplate.from_template("""
     user_input:{user_input}
 
 """)
+
+user_input_analysis_to_positive_or_negative = ChatPromptTemplate.from_template("""
+    당신은 사용자의 입력을 두 가지 레이블 중 하나로만 분류하는 분류기입니다: POSITIVE 또는 NEGATIVE
+
+    규칙:
+    - user_input이 긍정적인 응답이거나, 명확하게 분류하기 어려운 경우(알 수 없는 경우) → "POSITIVE"를 반환
+    - user_input이 부정적인 응답이거나, 어떤 질문을 포함하는 경우 → "NEGATIVE"를 반환
+    - 반드시 정확히 "POSITIVE" 또는 "NEGATIVE" 중 하나만 반환
+    - 그 외 부가 설명이나 다른 텍스트는 절대 포함하지 말 것
+
+    user_input: {user_input}
+                                                                               
+
+    입력 예시.
+    1. 알겠습니다. 
+    2. 잘 모르겠습니다. 
+    3. 아니요, 
+
+    출력예시
+    POSITIVE
+    POSITIVE
+    NEGATIVE
+
+
+"""
+)

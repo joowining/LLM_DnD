@@ -41,6 +41,7 @@ def introduce_background_node(state: GameSessionState)-> GameSessionState:
         intro_prompts = create_intro_prompt(False)
         formatted_prompt = intro_prompts.invoke({
             "origin": intro_script,
+            "context": state["game_context"],
             "usr_input": state["messages"][-1]
         })
 
@@ -74,11 +75,13 @@ def explain_game_condition_node(state: GameSessionState)-> GameSessionState:
         formatted_prompt = game_prompts.invoke({
             "origin": basic_game_script,
             "length": 20,
+            "context": state["game_context"]
         })
     else:
         game_prompts = create_basic_game_rule_prompt(False)
         formatted_prompt = game_prompts.invoke({
             "origin": basic_game_script,
+            "context": state["game_context"],
             "usr_input": state["messages"][-1]
         })
 
@@ -254,7 +257,12 @@ def enter_character_name(state: GameSessionState)-> GameSessionState:
     """"""
     # llm output
     context = state["game_context"]
-    message = CHARACTER_NAME_REQUEST_PROMPT.invoke({"context":context})
+    character_state = state["character_state"]
+    message = CHARACTER_NAME_REQUEST_PROMPT.invoke({
+        "context": context,
+        "race": character_state["race"],
+        "class": character_state["profession"]
+    })
     guidance_message = ChatModel.invoke(message)
     print(guidance_message.content, flush=True)
 

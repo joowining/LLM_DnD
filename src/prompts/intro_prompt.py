@@ -296,7 +296,10 @@ def create_intro_prompt(first_time: bool):
         원본: {origin}
         
         원본의 내용은 너무 길어서 사용자가 읽기에 부담스럽습니다. 
+        
         원본의 내용 중에서 필수적인 내용들을 중심으로 {length}줄로 요약해서 정리해주세요.
+
+        출력하는 문장 한줄 한줄마다 \n을 넣어서 출력해주세요 
         마지막엔 다음과 같은 말로 마무리하세요
         "질문이 있다면 해주시고 아니면 계속 진행할까요?" 
         """
@@ -304,7 +307,9 @@ def create_intro_prompt(first_time: bool):
     else:
         template = """
         당신은 Dungeon and Dragon 장르의 TRPG를 진행하고 있는 Game Master역할의 AI입니다.
-        
+                다음의 맥락과 게임룰에대한 원본 데이터를 바탕으로 적절히 응답을 생성하세요
+
+        맥락 : {context}
         원본: {origin}
         
         사용자는 요약한 내용을 보고 불완전함을 느끼고 궁금한 내용이 있습니다. 
@@ -326,11 +331,15 @@ def create_basic_game_rule_prompt(first_time: bool):
         template = """
         당신은 Dungeon and Dragon 장르의 TRPG를 진행하고 있는 Game Master역할의 AI입니다. 
         게임을 시작하기에 앞서 플레이어들에게 게임의 특징들과 설정, 룰을 설명해야 합니다.  
+        다음의 맥락과 게임룰에대한 원본 데이터를 바탕으로 적절히 응답을 생성하세요
+
+        맥락 : {context}
         
         원본: {origin}
         
         원본의 내용은 너무 길어서 사용자가 읽기에 부담스럽습니다. 
         원본의 내용 중에서 필수적인 내용들을 중심으로 {length}줄로 요약해서 정리해주세요.
+        출력하는 문장 한줄 한줄마다 \n을 넣어서 출력해주세요 
         마지막엔 다음과 같은 말로 마무리하세요
         "질문이 있다면 해주시고 아니면 계속 진행할까요?" 
         """
@@ -338,13 +347,17 @@ def create_basic_game_rule_prompt(first_time: bool):
     else:
         template = """
         당신은 Dungeon and Dragon 장르의 TRPG를 진행하고 있는 Game Master역할의 AI입니다.
-        
+                다음의 맥락과 게임룰에대한 원본 데이터를 바탕으로 적절히 응답을 생성하세요
+
+        맥락 : {context} 
         원본: {origin}
         
         사용자는 요약한 내용을 보고 불완전함을 느끼고 궁금한 내용이 있습니다. 
         다음의 사용자 질문을 읽고 원본의 내용을 바탕으로 질문에 답하세요. 
         원본과 무관한 내용이거나 원본으로부터 답할 수 없는 내용은 무시하고 대답할 수 없다고 응답하세요.
         마지막 문장에는 사용자로 하여금 이해되었는지, 게임을 진행해도 괜찮은지 더 이상 질문이 없는지 물어보세요 
+         마지막엔 다음과 같은 말로 마무리하세요
+        "질문이 있다면 해주시고 아니면 계속 진행할까요?" 
         
         사용자 질문: {usr_input}
         """
@@ -361,6 +374,12 @@ race_prompt = ChatPromptTemplate.from_template(
     game_context:{context}
 
     data:{race}
+
+    반드시 data내에 있는 종족들에 대한 내용을 항목들을 나열하여 설명하고
+    플레이어가 그중에서 하나를 선택하도록 유도하세요
+    출력하는 문장 한줄 한줄마다 \n을 넣어서 출력해주세요 
+    마지막엔 항상 다음과 같은 문장으로 마무리하세요
+    "에더리아 대륙의 모험을 위해 당신의 캐릭터의 종족을 선택해주세요"
     """
 )
 
@@ -410,6 +429,10 @@ race_explain_prompt = ChatPromptTemplate.from_template(
     현재 진행중인 게임의 맥락을 바탕으로 
     사용자가 물어보는 질문에 대해 답하세요
 
+    사용자는 현재 종족을 선택하기에 앞서서 종족들의 특징과 장점과 단점등이 궁금한 상태니다. 
+    data와 game_context를 바탕으로 각 종족의 이야기를 만들고 장단점을 설명하면서 
+    사용자가 특정 종족을 더 잘 선택할 수 있도록 유도해주세요. 
+    출력하는 문장 한줄 한줄마다 \n을 넣어서 출력해주세요 
     data:{race}
 
     game_context: {context}
@@ -422,9 +445,16 @@ race_explain_prompt = ChatPromptTemplate.from_template(
 class_prompt = ChatPromptTemplate.from_template(
     """
     당신은 Dungeon and Dragon 장르의 TRPG를 진행하고 있는 Game Master역할의 AI입니다.
-    다음에 제공되는 게임에서 선택할 수 있는 종족에 대한 데이터와
+    다음에 제공되는 게임에서 선택할 수 있는 클래스에 대한 데이터와
     현재 진행중인 게임의 맥락을 바탕으로
     사용자로 하여금 하나의 직업을 선택하게끔 물어보세요
+    출력하는 문장 한줄 한줄마다 \n을 넣어서 출력해주세요 
+
+    사용자가 직업을 선택할 수 있도록 제안하되 반드시 다음 data에서 제공하는 네가지 종류 내에서만 선택을 제안하세요
+    -Bard: 음유시인
+    -Mage: 마법사
+    -Rouge: 도적
+    -Warrior: 전사
 
     data:{class}
 
@@ -454,10 +484,10 @@ class_choice_prompt = ChatPromptTemplate.from_template(
 
 4. 한글로 사용자가 직업을 입력한 경우 다음의 영어로 대체해서 출력해주세요
    - 예시 : 
-   - 바드 -> Bard
+   - 바드, 음유시인-> Bard
    - 전사 -> Warrior
-   - 도적 -> Rogue
-   - 마법사 -> Mage
+   - 도적 ,도둑-> Rogue
+   - 마법사, 마술사-> Mage
 
 **응답 형식 (반드시 이 JSON 형식으로만 응답하세요):**
 ```json
@@ -485,7 +515,9 @@ CHARACTER_NAME_REQUEST_PROMPT = ChatPromptTemplate.from_template("""
 다음의 게임의 맥락을 이해한 후 그 바탕으로 사용자가 판타지세계에 적응할 수 있도록 이름을 저장하게 
 모험가에게 친근하고 흥미롭게 캐릭터의 이름을 물어보세요.
                                                                  
-game_context{context}
+game_context:{context}
+race : {race}
+class : {class}
 
 다음과 같은 요소들을 포함하여 응답해주세요:
 - 캐릭터 이름의 중요성에 대한 설명
@@ -493,6 +525,7 @@ game_context{context}
 - 분위기를 돋우는 판타지적 표현
 
 응답은 2-3문장 정도로 간결하게 작성하세요.
+마지막 응답문장은 반드시 당신의 캐릭터에 어떤 이름을 부여하시겠습니까? 로 끝내세요
 """)
 
 CHARACTER_NAME_VALIDATION_PROMPT = ChatPromptTemplate.from_template("""

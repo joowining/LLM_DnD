@@ -161,6 +161,7 @@ impl App {
     }
 
     pub fn update_output(&mut self) {
+        self.current_location = "게임 진행중... ".to_string();
         let mut messages = Vec::new();
         
         if let Some(receiver) = &self.output_receiver {
@@ -174,6 +175,7 @@ impl App {
                 PythonMessage::Output(line) => {
                     // 파이썬 출력만 타이핑 효과 적용
                     //self.add_system_message(&line);
+                    if line.chars().next() == Some('\n') { self.scroll_offset += 1;}
                     self.queue_typing_text(line);
                 }
                 PythonMessage::Error(line) => {
@@ -311,6 +313,7 @@ impl App {
             self.scroll_to_bottom();    
             all_lines[start_idx..end_idx].join("\n")
         } else {
+            self.scroll_to_bottom();
             String::new()
         }
     }
@@ -390,7 +393,8 @@ impl App {
             }
             
             // 사용자 입력은 즉시 표시
-            self.add_system_message(&format!("👤 {}", input));
+            //self.add_system_message(&format!("👤 {}", input));
+            self.scroll_to_bottom();
             
             if let Some(sender) = &self.stdin_sender {
                 if sender.send(input).is_err() {

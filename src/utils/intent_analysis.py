@@ -1,14 +1,25 @@
 from langchain_core.messages import HumanMessage
+from prompts.normal_prompt import user_input_analysis_to_positive_or_negative
+from llm.llm_setting import ChatModel
 
-def classify_intent(message: HumanMessage) -> str:
+import inspect
+
+def classify_intent(message: str) -> str:
     """간단한 의도 분류"""
     text = message.content.lower().strip()
+
+    formatted_template = user_input_analysis_to_positive_or_negative.invoke({
+        "user_input": text
+    })
+
+    response = ChatModel.invoke(formatted_template)
+
     
     # 긍정적 응답
-    if any(word in text for word in ["네", "그래", "예", "yes", "y", "계속", "더","알았어", "알았", "알겠"]):
+    if response.content == "POSITIVE":
         return "POSITIVE"
     # 부정적 응답  
-    elif any(word in text for word in ["아니", "no", "n", "그만", "종료", "나가"]):
+    elif response.content == "NEGATIVE":
         return "NEGATIVE"
     else:
-        return "UNCLEAR"
+        return "NEGATIVE"

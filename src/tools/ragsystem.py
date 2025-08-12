@@ -11,7 +11,9 @@ from typing import Optional
 import shutil
 #
 from prompts.rag_prompt import story_rag_prompt, rule_rag_prompt, village_rag_prompt
+from prompts.village_prompt import village_raw_text
 from .rag_config import CONFIG
+
 
 
 class RAGSystem:
@@ -47,11 +49,11 @@ class RAGSystem:
         if not update:
             collection_path = os.path.join(self.persist_dir, collection)
             if os.path.exists(collection_path):
-                print(f"[!] Vector store already exists for collection '{collection}'")
-                print("[!] Loading existing vector store...")
+                #print(f"[!] Vector store already exists for collection '{collection}'")
+                #print("[!] Loading existing vector store...")
                 self.load_vectorstore(collection)
                 return
-        print(f"[+] Building new vectorstore from file: { filepath}") 
+        #print(f"[+] Building new vectorstore from file: { filepath}") 
 
         # 파일 확장자에 따라 적절한 로더 선택
         if filepath.lower().endswith('.pdf'):
@@ -85,7 +87,7 @@ class RAGSystem:
             collection_name=collection,
             embedding_function=self.embedding
         )
-        print(f"[+] Vector store loaded from {self.persist_dir}")
+        #print(f"[+] Vector store loaded from {self.persist_dir}")
 
     def query(self, usr_input: str, prompt: ChatPromptTemplate , k:int = 4)-> str:
         '''사용자의 입력, 상황에 맞는 프롬프트 그리고 유사도 k를 입력받아 벡터저장소에서부터 유사문서를 찾아 응답하도록 함 '''
@@ -93,7 +95,7 @@ class RAGSystem:
         self.retriever = self.vectorstore.as_retriever(search_kwargs = {'k': k})
         docs = self.retriever.invoke(usr_input)
         self.prompt = prompt
-        formatted = self.prompt.invoke({'context': docs, 'question': usr_input})
+        formatted = self.prompt.invoke({'context': docs, 'question': usr_input, 'original':village_raw_text})
         # 답변생성 
         model = ChatOllama(model= self.llm_model)
         answer = model.invoke(formatted)
@@ -103,13 +105,13 @@ class RAGSystem:
     def update_vectorstore_v1(self, filepath: str, collection: str):
         """컬렉션을 완전히 삭제하고 새로 생성"""
         try:
-            print(f"[+] Starting to update vectorstore for collection: {collection}")
+            #print(f"[+] Starting to update vectorstore for collection: {collection}")
         
             # 기존 컬렉션이 있다면 삭제
             if self.vectorstore is not None:
                 try:
                     self.vectorstore.delete_collection()
-                    print(f"[+] Deleted existing collection: {collection}")
+                    #print(f"[+] Deleted existing collection: {collection}")
                 except Exception as e:
                     print(f"[!] Warning: Could not delete collection via vectorstore: {e}")
         
@@ -117,14 +119,14 @@ class RAGSystem:
             collection_path = os.path.join(self.persist_dir, collection)
             if os.path.exists(collection_path):
                 shutil.rmtree(collection_path)
-                print(f"[+] Removed collection directory: {collection_path}")
+                #print(f"[+] Removed collection directory: {collection_path}")
         
             # vectorstore 참조 초기화
             self.vectorstore = None
             self.retriever = None
         
         # 새로운 벡터 스토어 생성 (update=True로 설정하여 강제 생성)
-            print(f"[+] Creating new vectorstore from file: {filepath}")
+            #print(f"[+] Creating new vectorstore from file: {filepath}")
             self.build_vectorstore(filepath, collection, update=True) 
         except Exception as e:
             print(f"[!] Error updating vectorstore: {e}")
@@ -144,7 +146,7 @@ def collection_exists(persist_dir:str, collection_name: str) -> bool:
             collection_name = collection_name,
             embedding_function=embedding
         )
-        print("컬렉션 로드 성공")
+        #print("컬렉션 로드 성공")
         return True
     except Exception as e:
         print("컬렉션 로드 실패 {e}")
@@ -181,7 +183,7 @@ if __name__ == "__main__":
     import os
     
     if os.path.exists(persist_dir) and os.listdir(persist_dir):
-        print("벡터 저장소 존재")
+        #print("벡터 저장소 존재")
         # if collection_exists(persist_dir, rule_collection_name):
         #     rule_rag.load_vectorstore(rule_collection_name)
         #     rule_input = input("input your question about rule \n > ")
@@ -203,7 +205,7 @@ if __name__ == "__main__":
            village_stonebridge_rag.load_vectorstore(village_stonebridge_story_collection_name)
            story_input = input("마을에 대해 궁금한 내용을 물어보세요 \n > ")
            answer = village_stonebridge_rag.query(story_input, village_rag_prompt)
-           print(f"LLM의 RAG응답 : {answer}")
+           #print(f"LLM의 RAG응답 : {answer}")
         else:
            print("해당하는 마을 컬렉션이 벡터 스토어 내에 존재하지 않음")
 

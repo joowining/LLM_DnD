@@ -25,7 +25,7 @@ def main():
         print("게임을 시작하겠습니다...", flush=True)
         print("", flush=True)  # 빈 줄
 
-        ### Final Result
+        # ### Final Result
         #     # 초기 state 준비
         # initial_state = {
         #     "messages": [],
@@ -51,6 +51,7 @@ def main():
         # result = test_intro(initial_state)
         # result = village_graph(initial_state) 
 
+        #village_graph테스트용 임시 상태값
         sample_state = {
             "messages": [],
             "system_messages": [],

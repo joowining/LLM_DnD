@@ -59,6 +59,16 @@ def basic_question_analysis_router(state: GameSessionState) -> str:
         return result
     # "TALKING"
     elif result == "TALKING":
+        print("""
+마을에는 다음과 같은 주민들이 존재합니다. 
+1. 마르쿠스 스톤브릿지 (촌장)
+2. 소린 해머스트라이크 (대장장이)
+3. 로즈마리 골든허스 (여관주인)
+4. 가렌 스위프트블레이드 (길드마스터)
+5. 아델라 라이트헨드 (치유사제) 
+이 중에서 
+            """)
+        print("어떤 NPC와 대화를 나누고 싶으신가요?")
         return result
     # "STATUS"
     elif result == "STATUS":
