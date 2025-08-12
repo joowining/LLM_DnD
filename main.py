@@ -25,68 +25,68 @@ def main():
         print("게임을 시작하겠습니다...", flush=True)
         print("", flush=True)  # 빈 줄
 
-        # ### Final Result
-        #     # 초기 state 준비
-        # initial_state = {
-        #     "messages": [],
-        #     "system_messages": [],
-        #     "character_state": {
-        #         "name": "",
-        #         "race": "",
-        #         "profession": "",
-        #         "status": {},
-        #         "location_type": "",
-        #         "location": "",
-        #         "attack_item": "",
-        #         "defense_item": ""
-        #     },
-        #     "game_phase": GamePhase.introduction,
-        #     "game_context": [],
-        #     "story_summary": "",
-        #     "question_time": 0,
-        #     "cache_box": {}
-        # } 
-        # # 게임 실행
-
-        # result = test_intro(initial_state)
-        # result = village_graph(initial_state) 
-
-        #village_graph테스트용 임시 상태값
-        sample_state = {
+        ### Final Result
+            # 초기 state 준비
+        initial_state = {
             "messages": [],
             "system_messages": [],
             "character_state": {
-                "name": "Paul",
-                "race": "인간",
-                "profession": "Warrior",
-                "status": {
-                    "strength": 5,
-                    "agility": 5, 
-                    "mentality": 5,
-                    "luck": 5,
-                    "intelligence": 5,
-                    "base_hp": 100,
-                    "current_hp": 100
-                },
-                "location_type": "village",
-                "location": "스톤브릿지",
-                "attack_item": "long_sowrd",
-                "defense_item": "leather_jacket"
+                "name": "",
+                "race": "",
+                "profession": "",
+                "status": {},
+                "location_type": "",
+                "location": "",
+                "attack_item": "",
+                "defense_item": ""
             },
             "game_phase": GamePhase.introduction,
-            "game_context": ["""여러 종족들이 평화롭게 공존하던 에더리아 대륙에 
-                흑마법사의 사악한 마법으로 인해 어둠의 던전이 곳곳에 생겨나고 
-                모험가는 이를 클리어함으로써 던전을 정화하고 에더리아 대륙의 평화를 되찾아야 한다.
-                """],
-            "story_summary": """여러 종족들이 평화롭게 공존하던 에더리아 대륙에 
-                흑마법사의 사악한 마법으로 인해 어둠의 던전이 곳곳에 생겨나고 
-                모험가는 이를 클리어함으로써 던전을 정화하고 에더리아 대륙의 평화를 되찾아야 한다.
-                """,
+            "game_context": [],
+            "story_summary": "",
             "question_time": 0,
-            "cache_box": {},
-            "talking_context":[]
-        }
-        result = village_graph(sample_state)
+            "cache_box": {}
+        } 
+        # 게임 실행
+
+        result = test_intro(initial_state)
+        result = village_graph(initial_state) 
+
+        # #village_graph테스트용 임시 상태값
+        # sample_state = {
+        #     "messages": [],
+        #     "system_messages": [],
+        #     "character_state": {
+        #         "name": "Paul",
+        #         "race": "인간",
+        #         "profession": "Warrior",
+        #         "status": {
+        #             "strength": 5,
+        #             "agility": 5, 
+        #             "mentality": 5,
+        #             "luck": 5,
+        #             "intelligence": 5,
+        #             "base_hp": 100,
+        #             "current_hp": 100
+        #         },
+        #         "location_type": "village",
+        #         "location": "스톤브릿지",
+        #         "attack_item": "long_sowrd",
+        #         "defense_item": "leather_jacket"
+        #     },
+        #     "game_phase": GamePhase.introduction,
+        #     "game_context": ["""여러 종족들이 평화롭게 공존하던 에더리아 대륙에 
+        #         흑마법사의 사악한 마법으로 인해 어둠의 던전이 곳곳에 생겨나고 
+        #         모험가는 이를 클리어함으로써 던전을 정화하고 에더리아 대륙의 평화를 되찾아야 한다.
+        #         """],
+        #     "story_summary": """여러 종족들이 평화롭게 공존하던 에더리아 대륙에 
+        #         흑마법사의 사악한 마법으로 인해 어둠의 던전이 곳곳에 생겨나고 
+        #         모험가는 이를 클리어함으로써 던전을 정화하고 에더리아 대륙의 평화를 되찾아야 한다.
+        #         """,
+        #     "question_time": 0,
+        #     "cache_box": {},
+        #     "talking_context":[]
+        # }
+        # result = village_graph(sample_state)
         
         if result:
             print("🎉 게임을 성공적으로 클리어 하였습니다!", flush=True)
